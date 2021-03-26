@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLayerCats-Mous.Web", "NLayerCats-Mous.Web\NLayerCats-Mous.Web.csproj", "{636870DE-B088-4765-B1AC-0CFBD2296E17}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30BFD3B4-700C-47AA-9E1E-3DFB2152530E} = {30BFD3B4-700C-47AA-9E1E-3DFB2152530E}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLayerCats-Mous.BLL", "NLayerCats-Mous.BLL\NLayerCats-Mous.BLL.csproj", "{30BFD3B4-700C-47AA-9E1E-3DFB2152530E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7B957300-2273-491A-B571-BA96937AD7C2} = {7B957300-2273-491A-B571-BA96937AD7C2}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLayerCats-Mous.DAL", "NLayer-Cats-Mous.DAL\NLayerCats-Mous.DAL.csproj", "{7B957300-2273-491A-B571-BA96937AD7C2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{636870DE-B088-4765-B1AC-0CFBD2296E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{636870DE-B088-4765-B1AC-0CFBD2296E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{636870DE-B088-4765-B1AC-0CFBD2296E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{636870DE-B088-4765-B1AC-0CFBD2296E17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30BFD3B4-700C-47AA-9E1E-3DFB2152530E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30BFD3B4-700C-47AA-9E1E-3DFB2152530E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30BFD3B4-700C-47AA-9E1E-3DFB2152530E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30BFD3B4-700C-47AA-9E1E-3DFB2152530E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B957300-2273-491A-B571-BA96937AD7C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B957300-2273-491A-B571-BA96937AD7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B957300-2273-491A-B571-BA96937AD7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B957300-2273-491A-B571-BA96937AD7C2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {205E3D41-FC05-4641-A389-A9F630B03332}
+	EndGlobalSection
+EndGlobal

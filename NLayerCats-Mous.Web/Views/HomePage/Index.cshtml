@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h3 class="display-4">Добро пожаловать в благотворительный фонд "кошки-мышки"</h3>
+   
+    <h5>Лента :</h5>
+    @foreach (var item in ViewBag.AllOredrs)
+    {
+           <h6>@item.Description       @item.Amount   TMT </h6>
+    }
+</div>
