@@ -23,7 +23,7 @@ namespace NLayerCats_Mous.Web.Controllers
         }
         public IActionResult Index()
         {
-            var mapper = new MapperConfiguration(conf => conf.CreateMap<SuccessfulOrderDTO, ViewModelOrder>()).CreateMapper();
+            var mapper = new MapperConfiguration(conf => conf.CreateMap<OrderDTO, ViewModelOrder>()).CreateMapper();
             //List<ViewModelOrder> orders = mapper.Map<List<ViewModelOrder>>(orderService.GetSuccessfulOrders());
             ViewBag.AllOredrs =  mapper.Map<List<ViewModelOrder>>(orderService.GetSuccessfulOrders());
             return View();

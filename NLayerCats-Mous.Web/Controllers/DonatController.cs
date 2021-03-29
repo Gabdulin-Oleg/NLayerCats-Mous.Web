@@ -28,7 +28,7 @@ namespace NLayerCats_Mous.Web.Controllers
         {
             var mapper = new MapperConfiguration(conf => conf.CreateMap<ViewModelOrder, OrderDTO>()).CreateMapper();
             
-            return Redirect(await orderService.RegisteredOrder(mapper.Map<OrderDTO>(viewModel)));
+            return Redirect(await orderService.CreatOrder(mapper.Map<OrderDTO>(viewModel)));
         }
     }
 }
