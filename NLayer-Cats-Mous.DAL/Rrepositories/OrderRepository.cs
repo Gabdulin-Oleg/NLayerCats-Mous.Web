@@ -45,7 +45,7 @@ namespace NLayer_Cats_Mous.DAL.Repository
             }
         }
 
-        public void UpData(Order order)
+        public void UpDate(Order order)
         {
             using (Context db = new Context())
             {
