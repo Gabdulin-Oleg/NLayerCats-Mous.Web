@@ -14,8 +14,6 @@ namespace NLayerCats_Mous.BLL.DataTransferObject
         public string OrderNumber { get; set; }
         public int OrderStatus { get; set; } 
         public int Amount { get; set; }
-        public string ReturnUrl { get; set; }
-        public string FaiUrl { get; set; }
         public string Description { get; set; }
        
        

@@ -133,7 +133,7 @@ namespace NLayerCats_Mous.BLL.Service
             order.OrderStatus = orderStatus.orderStatus;
             if (orderStatus.errorCode == 0)
             {
-                ActionOptions(order);
+                await ActionOptions(order);
             }
 
         }
