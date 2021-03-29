@@ -16,10 +16,8 @@ using NLayerCats_Mous.BLL.Models;
 
 namespace NLayerCats_Mous.BLL.Service
 {
-    public class OrderService : IOrderService
-    //: IOrderService
+    public class OrderService : IOrderService    
     {
-
         IRepository db;
         IHttpContextAccessor httpContext;
 
@@ -37,8 +35,7 @@ namespace NLayerCats_Mous.BLL.Service
             {
                 var answer = await client.PostAsJsonAsync($"{client.BaseAddress}{urlAddress}", refistrationForm);
 
-                string result = await answer.Content.ReadAsStringAsync();
-                return result;
+                return  await answer.Content.ReadAsStringAsync();                
             }
 
         }
@@ -50,8 +47,7 @@ namespace NLayerCats_Mous.BLL.Service
             {
                 var answer = await client.PostAsJsonAsync($"{client.BaseAddress}{urlAddress}", getStatusForm);
 
-                string result = await answer.Content.ReadAsStringAsync();
-                return result;
+                return await answer.Content.ReadAsStringAsync();                
             }
 
         }
@@ -68,10 +64,10 @@ namespace NLayerCats_Mous.BLL.Service
             return mapper.Map<Order>(registrationForm);
         }
 
-        public List<SuccessfulOrderDTO> GetSuccessfulOrders()
+        public List<OrderDTO> GetSuccessfulOrders()
         {
-            var mapper = new MapperConfiguration(conf => conf.CreateMap<Order, SuccessfulOrderDTO>()).CreateMapper();
-            return mapper.Map<List<SuccessfulOrderDTO>>(db.GetAllSuccessfulOrder());
+            var mapper = new MapperConfiguration(conf => conf.CreateMap<Order, OrderDTO>()).CreateMapper();
+            return mapper.Map<List<OrderDTO>>(db.GetAllSuccessfulOrder());
         }
 
         public RegistrationForm CreatRegistrationForm(OrderDTO orderDto)
@@ -123,6 +119,7 @@ namespace NLayerCats_Mous.BLL.Service
             return orderId;
 
         }
+
         public async Task ChecStatus(string numberOrder)
         {
             string urlChecStatus = "payment/rest/getOrderStatus.do";
@@ -134,19 +131,22 @@ namespace NLayerCats_Mous.BLL.Service
             Order order = db.Find(numberOrder);
 
             order.OrderStatus = orderStatus.orderStatus;
-
-            ActionOptions(order);
+            if (orderStatus.errorCode == 0)
+            {
+                ActionOptions(order);
+            }
 
         }
+
         //Варианты действия в зависимости от статуса заказа
-        public void ActionOptions(Order order)
+        public async Task ActionOptions(Order order)
         {
             switch (order.OrderStatus)
             {
                 case (int)EnumOrderStatus.RegisteredButNotPaid:
                     {
                         Thread.Sleep(10000);
-                        Task.Run(() => ChecStatus(order.OrderNumber));
+                        await ChecStatus(order.OrderNumber);
                         break;
                     }
                 case (int)EnumOrderStatus.SuccessfullyPaid:
@@ -162,7 +162,7 @@ namespace NLayerCats_Mous.BLL.Service
                 case (int)EnumOrderStatus.OrderIsBeingProcessed:
                     {
                         Thread.Sleep(10000);
-                        Task.Run(() => ChecStatus(order.OrderNumber));
+                        await ChecStatus(order.OrderNumber);
                         break;
                     }
             }

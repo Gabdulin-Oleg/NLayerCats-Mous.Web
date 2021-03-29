@@ -17,8 +17,4 @@
     <ProjectReference Include="..\NLayer-Cats-Mous.DAL\NLayerCats-Mous.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

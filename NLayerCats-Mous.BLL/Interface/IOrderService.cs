@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NLayerCats_Mous.BLL.Service
+namespace NLayerCats_Mous.BLL.Interface
 {
     public interface IOrderService
     {
         Task ChecStatus(string numberOrder);
         Task<string> CreatOrder(OrderDTO orderDto);
-        List<SuccessfulOrderDTO> GetSuccessfulOrders();
+        List<OrderDTO> GetSuccessfulOrders();
     }
 }
