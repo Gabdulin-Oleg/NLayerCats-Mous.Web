@@ -1,9 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NLayerCats_Mous.BLL.DataTransferObject
+﻿namespace NLayerCats_Mous.BLL.DataTransferObject
 {
     //Фома на получение статуса заказа в системе оплаты
     public class OrderStatus

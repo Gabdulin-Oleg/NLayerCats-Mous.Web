@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace NLayer_Cats_Mous.DAL.Entitis
 {
     public class Order

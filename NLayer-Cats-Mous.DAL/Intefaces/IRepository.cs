@@ -1,7 +1,5 @@
 ﻿using NLayer_Cats_Mous.DAL.Entitis;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NLayer_Cats_Mous.DAL.Intefaces
 {

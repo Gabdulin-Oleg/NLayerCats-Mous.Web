@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NLayerCats_Mous.BLL.Models
+﻿namespace NLayerCats_Mous.BLL.Models
 {
     // Форма для отправки в систему оплаты на получение статуса заказа
     public class GetStatusForm

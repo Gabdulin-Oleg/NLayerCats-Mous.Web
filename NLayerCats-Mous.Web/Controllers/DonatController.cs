@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NLayerCats_Mous.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using NLayerCats_Mous.BLL.DataTransferObject;

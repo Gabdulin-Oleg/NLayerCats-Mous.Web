@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NLayerCats_Mous.BLL.DataTransferObject
+﻿namespace NLayerCats_Mous.BLL.DataTransferObject
 {
     // Форма на получение ID  заказа в системе оплаты
     public class OrderID

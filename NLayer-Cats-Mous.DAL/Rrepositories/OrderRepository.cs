@@ -1,10 +1,8 @@
 ﻿using NLayer_Cats_Mous.DAL.DBContext;
 using NLayer_Cats_Mous.DAL.Entitis;
 using NLayer_Cats_Mous.DAL.Intefaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NLayer_Cats_Mous.DAL.Repository
 {

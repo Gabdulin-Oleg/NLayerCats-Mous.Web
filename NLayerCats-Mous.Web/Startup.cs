@@ -1,18 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using NLayerCats_Mous.BLL.Service;
 using NLayerCats_Mous.BLL.Interface;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using NLayer_Cats_Mous.DAL.Intefaces;
 using NLayer_Cats_Mous.DAL.Repository;
-using Microsoft.AspNetCore.Http;
 
 namespace NLayerCats_Mous.Web
 {

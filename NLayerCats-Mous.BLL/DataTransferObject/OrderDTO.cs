@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-
-namespace NLayerCats_Mous.BLL.DataTransferObject
+﻿namespace NLayerCats_Mous.BLL.DataTransferObject
 {
     public class OrderDTO
     {
@@ -14,8 +8,6 @@ namespace NLayerCats_Mous.BLL.DataTransferObject
         public string OrderNumber { get; set; }
         public int OrderStatus { get; set; } 
         public int Amount { get; set; }
-        public string Description { get; set; }
-       
-       
+        public string Description { get; set; } 
     }
 }
