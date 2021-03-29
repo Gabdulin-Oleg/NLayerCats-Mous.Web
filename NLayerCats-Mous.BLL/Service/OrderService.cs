@@ -16,7 +16,8 @@ using NLayerCats_Mous.BLL.Models;
 
 namespace NLayerCats_Mous.BLL.Service
 {
-    public class OrderService //: IOrderService
+    public class OrderService : IOrderService
+    //: IOrderService
     {
 
         IRepository db;
@@ -26,7 +27,7 @@ namespace NLayerCats_Mous.BLL.Service
         {
             db = repository;
             this.httpContext = httpContext;
-            
+
         }
 
         public async Task<string> GetInformationFromSever(RegistrationForm refistrationForm, string urlAddress)
@@ -61,80 +62,107 @@ namespace NLayerCats_Mous.BLL.Service
             return mapper.Map<Order>(orderDTO);
         }
 
+        private Order MappingOrder(RegistrationForm registrationForm)
+        {
+            var mapper = new MapperConfiguration(conf => conf.CreateMap<RegistrationForm, Order>()).CreateMapper();
+            return mapper.Map<Order>(registrationForm);
+        }
+
         public List<SuccessfulOrderDTO> GetSuccessfulOrders()
         {
             var mapper = new MapperConfiguration(conf => conf.CreateMap<Order, SuccessfulOrderDTO>()).CreateMapper();
             return mapper.Map<List<SuccessfulOrderDTO>>(db.GetAllSuccessfulOrder());
         }
 
-        private string GenerationOrderNumber()
-        {
-            Random rand = new Random();
-            return rand.Next(1000000, 1000000000).ToString() + "-" + rand.Next(1000000, 1000000000).ToString() + "-" + rand.Next(1000000, 1000000000).ToString();
-        }        
-
-        public void CreatOrder(OrderDTO orderDto)
+        public RegistrationForm CreatRegistrationForm(OrderDTO orderDto)
         {
             RegistrationForm registrationForm = new RegistrationForm();
-            Order order = MappingOrder(orderDto);
-            db.Creat(order);
-            registrationForm.OrderNumber = GenerationOrderNumber();
+            var httpRequest = httpContext.HttpContext.Request;
+
+            registrationForm.Amount = orderDto.Amount;
+            registrationForm.Description = orderDto.Description;
+            registrationForm.OrderNumber = Helper.GenerationOrderNumber();
+            registrationForm.UserName = "client8";
+            registrationForm.Password = Helper.GetPassword(registrationForm.UserName);
+            registrationForm.ReturnUrl = httpRequest.Scheme + "://" + httpRequest.Host.Value + $"/HomePage/CheckStarus?orderNumber={registrationForm.OrderNumber}";
+            registrationForm.FaiUrl = httpRequest.Scheme + "://" + httpRequest.Host.Value + "/Home/Error";
+
+            return registrationForm;
+
         }
 
-        public async Task<string> RegisteredOrder(OrderDTO orderDto)
+        public GetStatusForm CreatStatusForm(string numberOrder)
+        {
+            GetStatusForm statusForm = new GetStatusForm();
+
+            statusForm.UserName = "client8";
+            statusForm.Password = Helper.GetPassword(statusForm.UserName);
+            statusForm.orderId = db.Find(numberOrder).OrderId;
+
+            return statusForm;
+        }
+
+        public async Task<string> CreatOrder(OrderDTO orderDto)
+        {
+            RegistrationForm registrationForm = CreatRegistrationForm(orderDto);
+            Order order = MappingOrder(registrationForm);
+            db.Creat(order);
+            OrderID orderID = await RegisteredOrder(registrationForm);
+            order.OrderId = orderID.orderId;
+
+            db.UpDate(order);
+            return orderID.formUrl;
+        }
+
+        public async Task<OrderID> RegisteredOrder(RegistrationForm registrationForm)
         {
             string urlRegistered = "payment/rest/register.do";
 
-            Order order = MappingOrder(orderDto);
-            db.Creat(order);
-            orderDto.OrderNumber = GenerationOrderNumber();
-            order.OrderNumber = orderDto.OrderNumber;
+            OrderID orderId = JsonSerializer.Deserialize<OrderID>(await GetInformationFromSever(registrationForm, urlRegistered));
 
-            var httpRequest = httpContext.HttpContext.Request;
-            orderDto.ReturnUrl = httpRequest.Scheme + "://" + httpRequest.Host.Value + $"/HomePage/CheckStarus?orderNumber={order.OrderNumber}";
-            orderDto.FaiUrl = httpRequest.Scheme + "://" + httpRequest.Host.Value + "/Home/Error";
+            return orderId;
 
-           
-            OrderID idOrder = JsonSerializer.Deserialize<OrderID>(await GetInformationFromSever(orderDto, urlRegistered));
-            
-            order.OrderId = idOrder.orderId;
-            db.UpData(order);
-
-            return idOrder.formUrl;
         }
         public async Task ChecStatus(string numberOrder)
         {
             string urlChecStatus = "payment/rest/getOrderStatus.do";
 
-            var mapper = new MapperConfiguration(conf => conf.CreateMap<Order, OrderDTO>()).CreateMapper();
-            OrderDTO orderDTO = mapper.Map<OrderDTO>(db.Find(numberOrder));
-            
-            OrderStatus statusOrder = JsonSerializer.Deserialize<OrderStatus>(await GetInformationFromSever(orderDTO, urlChecStatus));
+            GetStatusForm statusForm = CreatStatusForm(numberOrder);
 
-            orderDTO.OrderStatus = statusOrder.orderStatus;
+            OrderStatus orderStatus = JsonSerializer.Deserialize<OrderStatus>(await GetInformationFromSever(statusForm, urlChecStatus));
 
-            switch (orderDTO.OrderStatus)
+            Order order = db.Find(numberOrder);
+
+            order.OrderStatus = orderStatus.orderStatus;
+
+            ActionOptions(order);
+
+        }
+        //Варианты действия в зависимости от статуса заказа
+        public void ActionOptions(Order order)
+        {
+            switch (order.OrderStatus)
             {
                 case (int)EnumOrderStatus.RegisteredButNotPaid:
                     {
                         Thread.Sleep(10000);
-                        Task.Run(()=> ChecStatus(orderDTO.OrderNumber));
+                        Task.Run(() => ChecStatus(order.OrderNumber));
                         break;
                     }
                 case (int)EnumOrderStatus.SuccessfullyPaid:
                     {
-                        db.UpData(MappingOrder(orderDTO));
+                        db.UpDate(order);
                         break;
                     }
                 case (int)EnumOrderStatus.AuthorizationCanceled:
                     {
-                        db.Delete(MappingOrder(orderDTO));
+                        db.Delete(order);
                         break;
                     }
                 case (int)EnumOrderStatus.OrderIsBeingProcessed:
                     {
                         Thread.Sleep(10000);
-                        Task.Run(() => ChecStatus(orderDTO.OrderNumber));
+                        Task.Run(() => ChecStatus(order.OrderNumber));
                         break;
                     }
             }
