@@ -12,10 +12,11 @@ using AutoMapper;
 using NLayerCats_Mous.BLL.Hellper;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using NLayerCats_Mous.BLL.Models;
 
 namespace NLayerCats_Mous.BLL.Service
 {
-    public class OrderService : IOrderService
+    public class OrderService //: IOrderService
     {
 
         IRepository db;
@@ -28,12 +29,25 @@ namespace NLayerCats_Mous.BLL.Service
             
         }
 
-        public async Task<string> GetInformationFromSever(OrderDTO order, string urlAddress)
+        public async Task<string> GetInformationFromSever(RegistrationForm refistrationForm, string urlAddress)
         {
             using (HttpClient client = new HttpClient()
             { BaseAddress = new Uri("http://attest.turkmen-tranzit.com") })
             {
-                var answer = await client.PostAsJsonAsync($"{client.BaseAddress}{urlAddress}", order);
+                var answer = await client.PostAsJsonAsync($"{client.BaseAddress}{urlAddress}", refistrationForm);
+
+                string result = await answer.Content.ReadAsStringAsync();
+                return result;
+            }
+
+        }
+
+        public async Task<string> GetInformationFromSever(GetStatusForm getStatusForm, string urlAddress)
+        {
+            using (HttpClient client = new HttpClient()
+            { BaseAddress = new Uri("http://attest.turkmen-tranzit.com") })
+            {
+                var answer = await client.PostAsJsonAsync($"{client.BaseAddress}{urlAddress}", getStatusForm);
 
                 string result = await answer.Content.ReadAsStringAsync();
                 return result;
@@ -53,11 +67,19 @@ namespace NLayerCats_Mous.BLL.Service
             return mapper.Map<List<SuccessfulOrderDTO>>(db.GetAllSuccessfulOrder());
         }
 
-        private string generationOrderNumber()
+        private string GenerationOrderNumber()
         {
             Random rand = new Random();
             return rand.Next(1000000, 1000000000).ToString() + "-" + rand.Next(1000000, 1000000000).ToString() + "-" + rand.Next(1000000, 1000000000).ToString();
         }        
+
+        public void CreatOrder(OrderDTO orderDto)
+        {
+            RegistrationForm registrationForm = new RegistrationForm();
+            Order order = MappingOrder(orderDto);
+            db.Creat(order);
+            registrationForm.OrderNumber = GenerationOrderNumber();
+        }
 
         public async Task<string> RegisteredOrder(OrderDTO orderDto)
         {
@@ -65,7 +87,7 @@ namespace NLayerCats_Mous.BLL.Service
 
             Order order = MappingOrder(orderDto);
             db.Creat(order);
-            orderDto.OrderNumber = generationOrderNumber();
+            orderDto.OrderNumber = GenerationOrderNumber();
             order.OrderNumber = orderDto.OrderNumber;
 
             var httpRequest = httpContext.HttpContext.Request;
@@ -73,7 +95,7 @@ namespace NLayerCats_Mous.BLL.Service
             orderDto.FaiUrl = httpRequest.Scheme + "://" + httpRequest.Host.Value + "/Home/Error";
 
            
-            IdOrder idOrder = JsonSerializer.Deserialize<IdOrder>(await GetInformationFromSever(orderDto, urlRegistered));
+            OrderID idOrder = JsonSerializer.Deserialize<OrderID>(await GetInformationFromSever(orderDto, urlRegistered));
             
             order.OrderId = idOrder.orderId;
             db.UpData(order);
@@ -87,7 +109,7 @@ namespace NLayerCats_Mous.BLL.Service
             var mapper = new MapperConfiguration(conf => conf.CreateMap<Order, OrderDTO>()).CreateMapper();
             OrderDTO orderDTO = mapper.Map<OrderDTO>(db.Find(numberOrder));
             
-            StatusOrder statusOrder = JsonSerializer.Deserialize<StatusOrder>(await GetInformationFromSever(orderDTO, urlChecStatus));
+            OrderStatus statusOrder = JsonSerializer.Deserialize<OrderStatus>(await GetInformationFromSever(orderDTO, urlChecStatus));
 
             orderDTO.OrderStatus = statusOrder.orderStatus;
 
